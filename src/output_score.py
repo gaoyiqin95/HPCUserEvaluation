@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 # Import
-import os
 import sys
 import csv
 from scipy.stats import skew

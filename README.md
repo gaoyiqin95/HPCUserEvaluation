@@ -1,5 +1,10 @@
 # 超算用户作业水平指数评测工具
 
+## 编写环境
+
+Python 3.11.1
+Packages: os、csv、sys、scipy、pandas、numpy、matplotlib、warnings
+
 ## 数据采集与清理
 
 - 采集指定日期的作业数据
