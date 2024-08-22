@@ -70,10 +70,11 @@ def calculate_job_ncore_all(df):
 # Main
 
 if __name__ == "__main__":
-
+    
     # 确定执行操作的日期
-    if len(sys.argv) == 3:
-        dates = [0, sys.argv[1], sys.argv[2]]
+    if len(sys.argv) == 2:
+        dates = [sys.argv[1]]
+        all_output = False
     elif len(sys.argv) == 1:
         csv_filename = data_folder + 'info/dates_all.csv'
         dates = []
@@ -81,26 +82,38 @@ if __name__ == "__main__":
             reader = csv.reader(file)
             for row in reader:
                 dates.append(row[0])
+        dates = dates[1:]
+        all_output = True
     else:
         print("参数错误。")
         sys.exit(1)
     print(dates)
     print("")
 
-    for i in range(1,len(dates)):
-        date_new = dates[i]
-        df = pd.read_csv(data_folder + date_new + "/jobs_end.csv")
-        job_size_cluster = calculate_job_size_all(df)
-        cpu_efficiency_cluster = calculate_cpu_efficiency_all(df, date_new)
-        memory_efficiency_cluster = calculate_memory_efficiency_all(df, date_new)
-        exception_cluster = calculate_exception_all(df)
-        job_ncore_cluster = calculate_job_ncore_all(df)
+    columns = ['date', 'job_size', 'cpu_efficiency', 'memory_efficiency', 'percentage_exception', 'job_ncore']
+    df_cluster = pd.DataFrame(columns=columns)
 
-        new_row = [date_new, job_size_cluster, cpu_efficiency_cluster, 
-                memory_efficiency_cluster, exception_cluster, 
-                job_ncore_cluster]
-        print(new_row)
-        filename = data_folder + 'cluster/metrics_cluster.csv'
-        with open(filename, 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(new_row)    
+    for i in range(0,len(dates)):
+        date_new = dates[i]
+        try:
+            df = pd.read_csv(data_folder + date_new + "/jobs_end.csv")
+            job_size_cluster = calculate_job_size_all(df)
+            cpu_efficiency_cluster = calculate_cpu_efficiency_all(df, date_new)
+            memory_efficiency_cluster = calculate_memory_efficiency_all(df, date_new)
+            exception_cluster = calculate_exception_all(df)
+            job_ncore_cluster = calculate_job_ncore_all(df)
+
+            new_row = [date_new, job_size_cluster, cpu_efficiency_cluster, 
+                    memory_efficiency_cluster, exception_cluster, 
+                    job_ncore_cluster]
+            print(new_row)
+            df_cluster.loc[len(df_cluster.index)] = new_row
+        except FileNotFoundError:
+            msg = date_new + "文件不存在，跳过读取。"
+            print(msg)
+
+    if all_output:
+        df_cluster.to_csv(data_folder + "cluster/metrics_cluster.csv", index=False)
+    else:
+        last_row = df_cluster[df_cluster['date']==dates[-1]]
+        last_row.to_csv(data_folder + "cluster/metrics_cluster.csv", mode='a', index=False, header=False)  

@@ -3,6 +3,8 @@
 
 # Import
 import pandas as pd
+import sys
+import csv
 import warnings
 import numpy as np
 import matplotlib
@@ -19,11 +21,31 @@ score_columns = ["score_job", "score_cpu_efficiency", "score_memory_efficiency",
 
 data_folder = "../data/" # 数据文件路径
 
+# 确定执行操作的日期
+if len(sys.argv) == 3:
+    dates = [sys.argv[1], sys.argv[2]]
+    all_output = False
+elif len(sys.argv) == 1:
+    csv_filename = data_folder + 'info/dates_all.csv'
+    dates = []
+    with open(csv_filename, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            dates.append(row[0])
+    dates = dates[1:]
+    all_output = True
+else:
+    print("参数错误。")
+    sys.exit(1)
+print(dates)
+print("")
+
 # 计算得分
 
 ref_cluster_df = pd.read_csv(data_folder + "cluster/references_cluster.csv")
 
 df_cluster = pd.read_csv(data_folder + "cluster/metrics_cluster.csv")
+df_cluster = df_cluster[df_cluster['date'].isin(dates)]
 for c in range(0,5):
     the_column = columns[c]
     the_log_column = "log_" + the_column
@@ -36,7 +58,11 @@ for c in range(0,5):
 
 df_cluster["score_final"] = (df_cluster["score_job"]** ref_cluster_df.loc[0, "final_weight_cluster"]) * (df_cluster["score_cpu_efficiency"]**ref_cluster_df.loc[1, "final_weight_cluster"]) * (df_cluster["score_memory_efficiency"]**ref_cluster_df.loc[2, "final_weight_cluster"]) * (df_cluster["score_exception"]**ref_cluster_df.loc[3, "final_weight_cluster"]) * (df_cluster["score_ncore"]**ref_cluster_df.loc[4, "final_weight_cluster"])
 
-df_cluster.to_csv(data_folder + "cluster/scores_cluster.csv", index=False)
+if all_output:
+    df_cluster.to_csv(data_folder + "cluster/scores_cluster.csv", index=False)
+else:
+    last_row = df_cluster[df_cluster['date']==dates[-1]]
+    last_row.to_csv(data_folder + "cluster/scores_cluster.csv", mode='a', index=False, header=False)  
 
 
 score_final = df_cluster.iloc[-1]["score_final"]
