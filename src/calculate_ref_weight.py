@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Import
-
+import sys
 import os
 import csv
 from scipy.stats import skew
@@ -26,12 +26,17 @@ fig_folder = "../figures" # 图片文件路径
 
 print("--------------导入参考数据的日期--------------")
 print("")
-csv_filename = data_folder + 'info/dates_all_ref.csv'
 dates = []
-with open(csv_filename, mode='r', encoding='utf-8') as file:
-    reader = csv.reader(file)
-    for row in reader:
-        dates.append(row[0])
+if len(sys.argv) == 2:
+    print(sys.argv)
+    dates = [0, sys.argv[1]]
+else:
+    csv_filename = data_folder + 'info/dates_all_ref.csv'
+    dates = []
+    with open(csv_filename, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            dates.append(row[0])
 print(dates)
 print("")
 
@@ -262,5 +267,8 @@ ref_df = {
 
 # 使用字典创建DataFrame
 ref_df = pd.DataFrame(ref_df)
-ref_df.to_csv(data_folder + "info/references.csv", index=False)
+if len(sys.argv) == 2:
+    ref_df.to_csv(data_folder + "info/references_" + sys.argv[1] + ".csv", index=False)
+else:
+    ref_df.to_csv(data_folder + "info/references.csv", index=False)
 print(ref_df)

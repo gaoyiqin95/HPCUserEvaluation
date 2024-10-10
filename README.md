@@ -5,7 +5,32 @@
 Python 3.11.1
 Packages: os、csv、sys、scipy、pandas、numpy、matplotlib、warnings
 
-## 数据采集与清理
+## DEMO运行方法
+
+- demo数据预处理
+```
+python3 data_preprocess.py demo
+```
+
+- 已提供作业利用率数据，无需在slurm上执行
+
+- 生成指标绝对值数据
+```
+python3 output_metrics.py demo
+```
+- 生成demo数据的参考值
+```
+python3 calculate_ref_weight.py demo
+```
+
+- 生成demo数据的指数
+```
+python3 output_score.py demo
+```
+
+## 正式程序运行方法
+
+### 数据采集与清理
 
 - 采集指定日期的作业数据
 
@@ -45,13 +70,13 @@ sbatch memory_seff.slurm
     python3 output_metrics.py
     ```
 
-## 参考值与权重计算
+### 参考值与权重计算
 
 ```
 python3 calculate_ref_weight.py
 ```
 
-## 指数计算与分析
+### 指数计算与分析
 
 - 仅处理一周的数据
 ```
@@ -63,7 +88,7 @@ python3 output_score.py [date]
 python3 output_score.py
 ```
 
-## 集群整体指数评测
+### 集群整体指数评测
 
 - 生成指标绝对值数据
 

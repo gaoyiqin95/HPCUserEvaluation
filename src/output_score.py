@@ -37,11 +37,12 @@ else:
         for row in reader:
             dates.append(row[0])
 print(dates)
-print("")
 
 # 计算得分
-ref_df = pd.read_csv(data_folder + "info/references.csv")
-print(ref_df.loc[0, "if_log"])
+if sys.argv[1] == "demo":
+    ref_df = pd.read_csv(data_folder + "info/references_demo.csv")
+else:
+    ref_df = pd.read_csv(data_folder + "info/references.csv")
 
 for i in range(1,len(dates)):
     date_new = dates[i]
@@ -79,9 +80,10 @@ for i in range(1,len(dates)):
 
     df.to_csv(data_folder + date_new + "/scores_user.csv", index=True)
     
+
     print(date_new + "，指数前五用户: "
-            + df.loc[0,"department"] + df.loc[0,"principal_name"] + "、" 
-            + df.loc[1,"department"] + df.loc[1,"principal_name"] + "、" 
-            + df.loc[2,"department"] + df.loc[2,"principal_name"] + "、" 
-            + df.loc[3,"department"] + df.loc[3,"principal_name"] + "、" 
-            + df.loc[4,"department"] + df.loc[4,"principal_name"])
+        + df.loc[0,"department"] + df.loc[0,"principal_name"] + "、" 
+        + df.loc[1,"department"] + df.loc[1,"principal_name"] + "、" 
+        + df.loc[2,"department"] + df.loc[2,"principal_name"] + "、" 
+        + df.loc[3,"department"] + df.loc[3,"principal_name"] + "、" 
+        + df.loc[4,"department"] + df.loc[4,"principal_name"])

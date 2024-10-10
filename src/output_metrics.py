@@ -97,10 +97,13 @@ def calculate_job_ncore(df):
     return user_job_ncore
 
 #输出文件
-def export_result(dataframes, date_new):
+def export_result(dataframes, date_new, demo):
     result = pd.concat(dataframes, axis=1)
-
-    df_acct=pd.read_excel(data_folder + "info/account_list.xlsx")
+    if demo:
+        df_acct=pd.read_excel(data_folder + "info/account_list_demo.xlsx")
+    else:
+        df_acct=pd.read_excel(data_folder + "info/account_list.xlsx")
+        print("test")
     df_acct = df_acct[['account_name','department', 'principal_name']]
     df_acct.set_index("account_name", inplace=True)
 
@@ -117,12 +120,15 @@ def export_result(dataframes, date_new):
 
 if __name__ == "__main__":
 
+    demo = False
     # 确定执行操作的日期
     if len(sys.argv) > 2:
         print("参数错误。")
         sys.exit(1)
     elif len(sys.argv) == 2:
         dates = [0, sys.argv[1]]
+        if sys.argv[1] == "demo":
+            demo = True
     else:
         csv_filename = data_folder + 'info/dates_all.csv'
         dates = []
@@ -162,4 +168,4 @@ if __name__ == "__main__":
         exception_account = calculate_exception(df)
         job_ncore_account = calculate_job_ncore(df)
         dataframes = [job_size_account, cpu_efficiency_account, memory_efficiency_account, exception_account, job_ncore_account]
-        export_result(dataframes, date)
+        export_result(dataframes, date, demo)
