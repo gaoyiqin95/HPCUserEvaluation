@@ -27,9 +27,12 @@ fig_folder = "../figures" # 图片文件路径
 print("--------------导入参考数据的日期--------------")
 print("")
 dates = []
+demo = False
 if len(sys.argv) == 2:
     print(sys.argv)
     dates = [0, sys.argv[1]]
+    if sys.argv[1] == "demo":
+        demo = True
 else:
     csv_filename = data_folder + 'info/dates_all_ref.csv'
     dates = []
@@ -77,7 +80,8 @@ for i in range(0,5):
     print("")
     plt.xlabel(the_name)
     plt.ylabel('频次')
-    plt.savefig(os.path.join(fig_folder, file_name))
+    if demo == False:
+        plt.savefig(os.path.join(fig_folder, file_name))
     plt.close()
 
 # 计算指标数据分布偏度，如果偏度大于1，则使用log
@@ -124,7 +128,8 @@ for i in range(0,5):
         the_name = "log10(" + the_name + " + 1)"
     plt.xlabel(the_name)
     plt.ylabel('频次')
-    plt.savefig(os.path.join(fig_folder, file_name))
+    if demo == False:
+        plt.savefig(os.path.join(fig_folder, file_name))
     plt.close()
 
 # 参考值计算
