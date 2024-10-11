@@ -103,7 +103,6 @@ def export_result(dataframes, date_new, demo):
         df_acct=pd.read_excel(data_folder + "info/account_list_demo.xlsx")
     else:
         df_acct=pd.read_excel(data_folder + "info/account_list.xlsx")
-        print("test")
     df_acct = df_acct[['account_name','department', 'principal_name']]
     df_acct.set_index("account_name", inplace=True)
 
