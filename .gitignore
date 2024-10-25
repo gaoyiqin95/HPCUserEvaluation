@@ -3,3 +3,6 @@ data/
 figures/
 process.md
 src/my_tests.ipynb
+src/efficiency_seff_multi.sh
+template/cpu_seff_multi.slurm
+template/memory_seff_multi.slurm
