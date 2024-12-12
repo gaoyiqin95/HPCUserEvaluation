@@ -4,5 +4,6 @@ figures/
 process.md
 src/my_tests.ipynb
 src/efficiency_seff_multi.sh
+src/tests_paper_en.ipynb
 template/cpu_seff_multi.slurm
 template/memory_seff_multi.slurm
